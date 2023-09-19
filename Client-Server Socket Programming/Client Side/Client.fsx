@@ -30,7 +30,7 @@ try
             let command = Console.ReadLine().Trim() // Trim leading and trailing whitespace
             writer.WriteLine(command)
             writer.Flush()
-
+            processCommands()
 
         with
         | :? IOException -> () // Handle server disconnect

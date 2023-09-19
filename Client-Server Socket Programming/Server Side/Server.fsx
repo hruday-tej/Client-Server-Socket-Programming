@@ -14,7 +14,15 @@ let handleClient (clientSocket: TcpClient) =
     writer.WriteLine("Hello!")
     writer.Flush()
 
-    writer.WriteLine(reader.ReadLine())
+    // writer.WriteLine(reader.ReadLine())
+
+    let rec receiveClientMessage () =
+        let client_msg = reader.ReadLine()
+        Console.WriteLine("Client "+clientSocket.Client.RemoteEndPoint.ToString()+" says:")
+        Console.WriteLine(client_msg)
+        receiveClientMessage()
+
+    receiveClientMessage()
 
 
 let serverMain port =
