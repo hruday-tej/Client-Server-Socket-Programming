@@ -1,0 +1,29 @@
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/bin/Debug/net7.0/Client-Server Socket Programming
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/bin/Debug/net7.0/Client-Server Socket Programming.deps.json
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/bin/Debug/net7.0/Client-Server Socket Programming.runtimeconfig.json
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/bin/Debug/net7.0/Client-Server Socket Programming.dll
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/bin/Debug/net7.0/Client-Server Socket Programming.pdb
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/bin/Debug/net7.0/FSharp.Core.dll
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/bin/Debug/net7.0/cs/FSharp.Core.resources.dll
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/bin/Debug/net7.0/de/FSharp.Core.resources.dll
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/bin/Debug/net7.0/es/FSharp.Core.resources.dll
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/bin/Debug/net7.0/fr/FSharp.Core.resources.dll
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/bin/Debug/net7.0/it/FSharp.Core.resources.dll
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/bin/Debug/net7.0/ja/FSharp.Core.resources.dll
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/bin/Debug/net7.0/ko/FSharp.Core.resources.dll
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/bin/Debug/net7.0/pl/FSharp.Core.resources.dll
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/bin/Debug/net7.0/pt-BR/FSharp.Core.resources.dll
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/bin/Debug/net7.0/ru/FSharp.Core.resources.dll
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/bin/Debug/net7.0/tr/FSharp.Core.resources.dll
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/bin/Debug/net7.0/zh-Hans/FSharp.Core.resources.dll
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/bin/Debug/net7.0/zh-Hant/FSharp.Core.resources.dll
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/obj/Debug/net7.0/Client-Server Socket Programming.fsproj.AssemblyReference.cache
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/obj/Debug/net7.0/Client-Server Socket Programming.AssemblyInfoInputs.cache
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/obj/Debug/net7.0/Client-Server Socket Programming.AssemblyInfo.fs
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/obj/Debug/net7.0/Client-Server Socket Programming.fsproj.CoreCompileInputs.cache
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/obj/Debug/net7.0/Client-Server Socket Programming.fsproj.CopyComplete
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/obj/Debug/net7.0/Client-Server Socket Programming.dll
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/obj/Debug/net7.0/refint/Client-Server Socket Programming.dll
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/obj/Debug/net7.0/Client-Server Socket Programming.pdb
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/obj/Debug/net7.0/Client-Server Socket Programming.genruntimeconfig.cache
+/Users/hrudaytej/RiderProjects/Client-Server Socket Programming/Client-Server Socket Programming/obj/Debug/net7.0/ref/Client-Server Socket Programming.dll
