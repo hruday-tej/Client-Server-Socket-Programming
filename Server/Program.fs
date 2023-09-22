@@ -23,8 +23,13 @@ module ServerSideProgram=
                 let bytes = stream.Read(bufferArray, 0, bufferArray.Length)
                 let clientResponseData = System.Text.Encoding.ASCII.GetString(bufferArray, 0, bytes)
                 Console.WriteLine("Received From Client: {0}", clientResponseData)
-
-        finally
-            Console.WriteLine("Something Went Wrong")
+                // while true do
+                //     printfn "nn"
+                let msg = System.Text.Encoding.ASCII.GetBytes("Server is Saying Hii!")
+                stream.Write(msg, 0, msg.Length)
+                Console.WriteLine("Sent {0} to the Client", msg)
+            
+            with
+                | Failure(msg) -> printfn "%s" msg;
 
 ServerSideProgram.initiateServer()

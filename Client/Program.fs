@@ -19,8 +19,8 @@ module ClientSideProgram=
             let responseData = System.Text.Encoding.ASCII.GetString(bufferArray, 0, bytes)
             Console.WriteLine("SERVER's RESPONSE {0}", responseData)
 
-        finally
-            printfn "Something Unexpected occured"
+        with
+            | Failure(msg: string) -> printfn "SOMETHING FAILED";
     
 
 ClientSideProgram.connect ("","Hello from neww client")
