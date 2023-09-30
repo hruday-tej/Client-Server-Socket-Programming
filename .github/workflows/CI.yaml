@@ -30,6 +30,6 @@ jobs:
           dotnet build ${{ matrix.configuration.project }}
 
       - name: Run Project
-        timeout-seconds: 15  # Set the maximum duration for the step to 15 seconds
+        timeout-minutes: 1  # Set the maximum duration for the step to 1 min
         run: |
           dotnet run --project ${{ matrix.configuration.project }}
