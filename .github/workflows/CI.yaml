@@ -2,8 +2,7 @@ name: Build and Run F# Programs
 
 on:
   push:
-    branches:
-      - master  # Adjust the branch name as needed
+    branches: '**'
 
 jobs:
   build-and-run:
