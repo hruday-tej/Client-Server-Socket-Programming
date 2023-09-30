@@ -32,4 +32,8 @@ jobs:
       - name: Run Project
         timeout-minutes: 1  # Set the maximum duration for the step to 1 min
         run: |
+         if [[ "${{ matrix.configuration.project }}" == "Client/Client.fsproj" ]]; then
+            echo "Waiting for 10 seconds..."
+            sleep 30
+          fi
           dotnet run --project ${{ matrix.configuration.project }}
