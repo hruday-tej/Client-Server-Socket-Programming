@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "FPjkUlFf7iXrFHXv/8/4jXAm/4hYUvL6CQa5LagnG14z0OMyxYwquP+Smg4lzssbRx9usQaa4XKQiztcJ5kc3Q==",
+  "success": true,
+  "projectFilePath": "/Users/hrudaytej/Personal Projs/DOSP/Client-Server-Socket-Programming/Server/Server.fsproj",
+  "expectedPackageFiles": [
+    "/Users/hrudaytej/.nuget/packages/fsharp.core/7.0.400/fsharp.core.7.0.400.nupkg.sha512"
+  ],
+  "logs": []
+}
