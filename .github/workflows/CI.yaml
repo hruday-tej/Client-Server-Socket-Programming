@@ -9,6 +9,13 @@ jobs:
   build-and-run:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        configuration:
+          - project: "Server/Server.fsproj"
+          - project: "Client/Client.fsproj"
+          # Add more configurations as needed
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -18,12 +25,11 @@ jobs:
         with:
           dotnet-version: '7.0'  # Adjust to the desired .NET version
 
-      - name: Build Server and Client
+      - name: Build Project
         run: |
-          dotnet build Server/Server.fsproj
-          dotnet build Client/Client.fsproj
+          dotnet build ${{ matrix.configuration.project }}
 
-      - name: Run Server and Client in Parallel
+      - name: Run Project
+        timeout-seconds: 15  # Set the maximum duration for the step to 15 seconds
         run: |
-          timeout -t 10s dotnet run --project Server/Server.fsproj &
-          timeout -t 10s dotnet run --project Client/Client.fsproj &
+          dotnet run --project ${{ matrix.configuration.project }}
