@@ -17,8 +17,8 @@ module ServerSideProgram=
             let result = int x - int y
             Console.WriteLine("Responding to client {0} with result: {1}", clientNum, result)
             sprintf "%d" result
-        | [| "multiply"; x; y; z |] ->
-            let result = int x * int y * int z
+        | [| "multiply"; x; y |] ->
+            let result = int x * int y 
             Console.WriteLine("Responding to client {0} with result: {1}", clientNum, result)
             sprintf "%d" result
         | _ ->
