@@ -30,4 +30,4 @@ jobs:
           dotnet run --project Server/Server.fsproj &
 
           # Build the client and run it in the background
-          dotnet run --project Client/Client.fsproj &
+          dotnet run --project Client/Client.fsproj
