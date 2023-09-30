@@ -3,7 +3,7 @@ name: Build and Run F# Programs
 on:
   push:
     branches:
-      - feature/emin  # Adjust the branch name as needed
+      - main  # Adjust the branch name as needed
 
 jobs:
   build-and-run:
@@ -23,10 +23,7 @@ jobs:
           dotnet build Server/Server.fsproj
           dotnet build Client/Client.fsproj
 
-      - name: Run Server
-        working-directory: ./Server  # Set the working directory to Server/
-        run: dotnet run --project Server.fsproj
-
-      - name: Run Client
-        working-directory: ./Client  # Set the working directory to Client/
-        run: dotnet run --project Client.fsproj
+      - name: Run Server and Client in Parallel
+        run: |
+          timeout -t 10s dotnet run --project Server/Server.fsproj &
+          timeout -t 10s dotnet run --project Client/Client.fsproj &
