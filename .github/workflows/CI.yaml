@@ -23,3 +23,11 @@ jobs:
       - name: Build Client
         run: |
           dotnet build Client/Client.fsproj
+      - name: Build Client
+        run: |
+          sudo apt-get install tmux
+          tmux
+          dotnet run --project Server.fsproj
+          dotnet run --project Client.fsproj
+
+
