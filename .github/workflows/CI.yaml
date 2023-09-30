@@ -1,0 +1,32 @@
+name: Build and Run F# Programs
+
+on:
+  push:
+    branches:
+      - main  # Adjust the branch name as needed
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set Up .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '7.0'  # Adjust to the desired .NET version
+
+      - name: Build Server and Client
+        run: |
+          dotnet build Server/Server.fsproj
+          dotnet build Client/Client.fsproj
+
+      - name: Run Server
+        working-directory: ./Server  # Set the working directory to Server/
+        run: dotnet run --project Server.fsproj
+
+      - name: Run Client
+        working-directory: ./Client  # Set the working directory to Client/
+        run: dotnet run --project Client.fsproj
