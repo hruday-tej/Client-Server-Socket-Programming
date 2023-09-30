@@ -24,7 +24,7 @@ module ServerSideProgram=
         | _ ->
             "Invalid command"
 
-    let rec handleClient (client: TcpClient, clientNum: int) =
+    let rec clientCommunication (client: TcpClient, clientNum: int) =
         try
             let stream = client.GetStream()
             let bufferArray : byte[] = Array.zeroCreate 256
@@ -69,7 +69,7 @@ module ServerSideProgram=
                 Console.WriteLine("Connected")
                 async {
                     do! Async.SwitchToThreadPool()
-                    handleClient(client, clientNum)
+                    clientCommunication(client, clientNum)
                 } |> Async.Start
         with
             | Failure(msg) -> printfn "%s" msg
