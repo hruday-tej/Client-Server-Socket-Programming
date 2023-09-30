@@ -24,6 +24,36 @@ module ServerSideProgram=
         | _ ->
             "Invalid command"
 
+    let rec handleClient (client: TcpClient, clientNum: int) =
+        try
+            let stream = client.GetStream()
+            let bufferArray : byte[] = Array.zeroCreate 256
+            let mutable continueProcessing = true
+
+            let handleRequest () =
+                let bytes = stream.Read(bufferArray, 0, bufferArray.Length)
+                if bytes = 0 then
+                    // The client has disconnected, so stop processing
+                    Console.WriteLine("Client {0} has disconnected.", clientNum)
+                    continueProcessing <- false
+                else
+                    let clientRequestData = System.Text.Encoding.ASCII.GetString(bufferArray, 0, bytes)
+                    Console.WriteLine("Received From Client {0}: {1}", clientNum, clientRequestData)
+
+                    let serverResponseData = operate (clientRequestData, clientNum)
+                    let msg = System.Text.Encoding.ASCII.GetBytes(serverResponseData)
+                    stream.Write(msg, 0, msg.Length)
+                    Console.WriteLine("Response Sent to Client {0}", clientNum)
+
+            while continueProcessing do
+                handleRequest()
+
+        with
+            | ex ->
+                Console.WriteLine("An error occurred with Client {0}: {1}", clientNum, ex.Message)
+                // Handle the error and continue processing other clients if needed
+
+
     let initiateServer() =
         try
             let port = 13000;
@@ -37,19 +67,12 @@ module ServerSideProgram=
                 let client = server.AcceptTcpClient()
                 clientNum <- clientNum + 1
                 Console.WriteLine("Connected")
-                let stream = client.GetStream()
-                let bufferArray : byte[] = Array.zeroCreate 256
-                let bytes = stream.Read(bufferArray, 0, bufferArray.Length)
-                let clientRequestData = System.Text.Encoding.ASCII.GetString(bufferArray, 0, bytes)
-                Console.WriteLine("Received From Client {0} : {1}", clientNum, clientRequestData)
-                // while true do
-                //     printfn "nn"
-                let serverResponseData = operate (clientRequestData, clientNum)
-                let msg = System.Text.Encoding.ASCII.GetBytes(serverResponseData)
-                stream.Write(msg, 0, msg.Length)
-                Console.WriteLine("Response Sent to the Client  {0} ", clientNum)
-
-            with
-                | Failure(msg) -> printfn "%s" msg;
+                async {
+                    do! Async.SwitchToThreadPool()
+                    handleClient(client, clientNum)
+                } |> Async.Start
+        with
+            | Failure(msg) -> printfn "%s" msg
+            | ex -> printfn "An error occurred: %s" ex.Message
 
 ServerSideProgram.initiateServer()
