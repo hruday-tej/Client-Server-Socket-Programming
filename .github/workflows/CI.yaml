@@ -3,7 +3,7 @@ name: Build and Run F# Programs
 on:
   push:
     branches:
-      - main  # Adjust the branch name as needed
+      - feature/emin  # Adjust the branch name as needed
 
 jobs:
   build-and-run:
