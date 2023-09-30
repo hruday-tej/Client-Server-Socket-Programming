@@ -23,12 +23,13 @@ jobs:
       - name: Build Client
         run: |
           dotnet build Client/Client.fsproj
-      - name:  Run Server
+      - name:  Run Server and client
         run: |
-          dotnet run --project Server/Server.fsproj
-        background: true
+        # Build the server and run it in the background
+          dotnet run --project Server/Server.fsproj &
 
-      - name:  Run Client
-        run: |
-          dotnet run --project Client/Client.fsproj
-        background: true
+          # Build the client and run it in the background
+          dotnet run --project Client/Client.fsproj &
+
+          # Wait for both background processes to complete
+          wait
