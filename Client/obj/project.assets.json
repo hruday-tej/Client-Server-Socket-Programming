@@ -108,25 +108,25 @@
     ]
   },
   "packageFolders": {
-    "/Users/hrudaytej/.nuget/packages/": {}
+    "C:\\Users\\user\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/hrudaytej/Personal Projs/DOSP/Client-Server-Socket-Programming/Client/Client.fsproj",
+      "projectUniqueName": "C:\\Users\\user\\Desktop\\DOSP-1\\Client-Server-Socket-Programming\\Client\\Client.fsproj",
       "projectName": "Client",
-      "projectPath": "/Users/hrudaytej/Personal Projs/DOSP/Client-Server-Socket-Programming/Client/Client.fsproj",
-      "packagesPath": "/Users/hrudaytej/.nuget/packages/",
-      "outputPath": "/Users/hrudaytej/Personal Projs/DOSP/Client-Server-Socket-Programming/Client/obj/",
+      "projectPath": "C:\\Users\\user\\Desktop\\DOSP-1\\Client-Server-Socket-Programming\\Client\\Client.fsproj",
+      "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\user\\Desktop\\DOSP-1\\Client-Server-Socket-Programming\\Client\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/hrudaytej/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
-        "/usr/local/share/dotnet/sdk/7.0.401/FSharp/library-packs": {},
+        "C:\\Program Files\\dotnet\\sdk\\7.0.401\\FSharp\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -163,7 +163,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.401/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
       }
     }
   }
