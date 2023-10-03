@@ -114,7 +114,7 @@ module ServerSideProgram=
                 Console.Write("Waiting for a connection... ")
                 let client = server.AcceptTcpClient()
                 clientNum <- clientNum + 1
-                Console.WriteLine("Client {0} Client {0} Connected",clientNum,clientNum)
+                Console.WriteLine("Client {0} Connected",clientNum)
                 async {
                     do! Async.SwitchToThreadPool()
                     clientCommunication(client, clientNum, server)
