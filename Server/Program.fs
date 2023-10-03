@@ -78,6 +78,8 @@ module ServerSideProgram=
                     Console.WriteLine("Received From Client {0}: {1}", clientNum, clientRequestData)
                     let wordArray = clientRequestData.Split([|' '|], StringSplitOptions.RemoveEmptyEntries)
                     let serverResponseData = operate (wordArray)
+                    let wordArray = clientRequestData.Split([|' '|], StringSplitOptions.RemoveEmptyEntries)
+                    let serverResponseData = operate (wordArray)
                     let msg = System.Text.Encoding.ASCII.GetBytes(serverResponseData)
                     stream.Write(msg, 0, msg.Length)
                     Console.WriteLine("Responding to Client {0} with result: {1}", clientNum, serverResponseData)
@@ -112,7 +114,7 @@ module ServerSideProgram=
                 Console.Write("Waiting for a connection... ")
                 let client = server.AcceptTcpClient()
                 clientNum <- clientNum + 1
-                Console.WriteLine("Client {0} Connected",clientNum)
+                Console.WriteLine("Client {0} Client {0} Connected",clientNum,clientNum)
                 async {
                     do! Async.SwitchToThreadPool()
                     clientCommunication(client, clientNum, server)
