@@ -4,6 +4,7 @@ open System.Net
 open System.Net.Sockets
 open System.Threading.Tasks
 open System.Windows
+open System.Threading
 exception BreakException
 
 module ClientSideProgram=
@@ -32,13 +33,14 @@ module ClientSideProgram=
             } |> Async.Start
             
             
-            
-            async{
+            let cts = new CancellationTokenSource()
+            let ReadServer = async{
                 while is_run do
                     let message = Console.ReadLine()
                     let data : byte[] = System.Text.Encoding.ASCII.GetBytes(message)
                     stream.Write(data, 0, data.Length)
-            } |> Async.Start
+            } 
+            Async.Start(ReadServer, cts.Token)
 
             while is_run do
                 async{
@@ -46,6 +48,7 @@ module ClientSideProgram=
                 } |> ignore
 
             try
+                cts.Cancel()
                 tcpClient.Close()
                 raise BreakException
             with

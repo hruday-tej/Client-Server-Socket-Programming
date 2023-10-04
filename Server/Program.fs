@@ -5,6 +5,7 @@ open System.Net;
 open System.Net.Sockets;
 open System.Text;
 open System.Threading.Tasks
+open System.Threading
 
 module ServerSideProgram=
     let mutable is_server_run = true
@@ -109,7 +110,8 @@ module ServerSideProgram=
 
 
     let initiateServer() =
-        async{
+        let cts = new CancellationTokenSource()
+        let runServer = async{
             try
                 let port = 13000;
                 let ipAddress = IPAddress.Parse("127.0.0.1")
@@ -129,13 +131,16 @@ module ServerSideProgram=
             with
                 | Failure(msg) -> printfn "%s" msg
                 | ex -> printfn "An error occurred: %s" ex.Message
-        }|> Async.Start
+        }
+        Async.Start(runServer, cts.Token)
 
 
         while is_server_run do
             async{
                 do! Async.Sleep 500
             } |> ignore
+
+        cts.Cancel()
             
 
         
