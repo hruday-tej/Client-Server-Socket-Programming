@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "pVfkwfCB+Vjw9Z/oGF/iRy8sb5EGcq8StHTGtUo1gYcSPmslRqtWdRgQwZtd5E7WjtnfSaMVLbf8MlUJf8LlJg==",
+  "dgSpecHash": "k06XQ8UMmLTKlL+d2G+6GcF8fH2PsKcLe2kG9jz179u3Ft7Y69Z08vHFwW7DiNwWETWTV08e/Up7wGGfK3GZ8A==",
   "success": true,
-  "projectFilePath": "C:\\Users\\user\\Desktop\\DOSP-1\\Client-Server-Socket-Programming\\Server\\Server.fsproj",
+  "projectFilePath": "C:\\Users\\user\\Desktop\\test\\Client-Server-Socket-Programming\\Server\\Server.fsproj",
   "expectedPackageFiles": [
     "C:\\Users\\user\\.nuget\\packages\\fsharp.core\\7.0.400\\fsharp.core.7.0.400.nupkg.sha512"
   ],
