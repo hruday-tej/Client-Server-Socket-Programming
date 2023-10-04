@@ -52,10 +52,16 @@ module ServerSideProgram=
                 result <- int(array.[1])
                 for i = 2 to array.Length-1 do
                     result <- result * int(array.[i])
+            elif (array.[0] = "bye")
+            then
+                result <- -5
+            elif (array.[0] = "terminate")
+            then
+                result <- -5
             code <- string(result)
         code
 
-    let rec clientCommunication (client: TcpClient, clientNum: int) =
+    let rec clientCommunication (client: TcpClient, clientNum: int, server: TcpListener) =
         try
             let stream = client.GetStream()
             let bufferArray : byte[] = Array.zeroCreate 256
@@ -72,10 +78,20 @@ module ServerSideProgram=
                     Console.WriteLine("Received From Client {0}: {1}", clientNum, clientRequestData)
                     let wordArray = clientRequestData.Split([|' '|], StringSplitOptions.RemoveEmptyEntries)
                     let serverResponseData = operate (wordArray)
+                    let wordArray = clientRequestData.Split([|' '|], StringSplitOptions.RemoveEmptyEntries)
+                    let serverResponseData = operate (wordArray)
                     let msg = System.Text.Encoding.ASCII.GetBytes(serverResponseData)
                     stream.Write(msg, 0, msg.Length)
                     Console.WriteLine("Responding to Client {0} with result: {1}", clientNum, serverResponseData)
-                   // Console.WriteLine("Response Sent to Client {0}", clientNum)
+                    // Console.WriteLine("Response Sent to Client {0}", clientNum)
+
+                    let parts = clientRequestData.Split(' ')
+                    match parts with
+                    | [| "terminate" |] ->
+                        // cancellationTokenSource.Cancel()
+                        server.Stop()
+                    | _ ->
+                        printf ""
 
             while continueProcessing do
                 handleRequest()
@@ -101,7 +117,7 @@ module ServerSideProgram=
                 Console.WriteLine("Client {0} Connected",clientNum)
                 async {
                     do! Async.SwitchToThreadPool()
-                    clientCommunication(client, clientNum)
+                    clientCommunication(client, clientNum, server)
                 } |> Async.Start
         with
             | Failure(msg) -> printfn "%s" msg
