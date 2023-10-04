@@ -70,24 +70,29 @@ module ServerSideProgram=
 
         async{
             while continueProcessing && is_server_run do
-                let bytes = stream.Read(bufferArray, 0, bufferArray.Length)
-                if bytes = 0 then
-                    // The client has disconnected, so stop processing
-                    Console.WriteLine("Client {0} has disconnected.", clientNum)
-                    continueProcessing <- false
-                else
-                    let clientRequestData = System.Text.Encoding.ASCII.GetString(bufferArray, 0, bytes)
-                    Console.WriteLine("Received From Client {0}: {1}", clientNum, clientRequestData)
-                    let wordArray = clientRequestData.Split([|' '|], StringSplitOptions.RemoveEmptyEntries)
-                    let serverResponseData = operate (wordArray)
-                    
-                    if serverResponseData = "-6" then
-                        is_server_run <- false
+                try
+                    let bytes = stream.Read(bufferArray, 0, bufferArray.Length)
+                    if bytes = 0 then
+                        // The client has disconnected, so stop processing
+                        Console.WriteLine("Client {0} has disconnected.", clientNum)
+                        continueProcessing <- false
                     else
-                        let msg = System.Text.Encoding.ASCII.GetBytes(serverResponseData)
-                        stream.Write(msg, 0, msg.Length)
-                        Console.WriteLine("Responding to Client {0} with result: {1}", clientNum, serverResponseData)
-                    // Console.WriteLine("Response Sent to Client {0}", clientNum)
+                        let clientRequestData = System.Text.Encoding.ASCII.GetString(bufferArray, 0, bytes)
+                        Console.WriteLine("Received From Client {0}: {1}", clientNum, clientRequestData)
+                        let wordArray = clientRequestData.Split([|' '|], StringSplitOptions.RemoveEmptyEntries)
+                        let serverResponseData = operate (wordArray)
+                        
+                        if serverResponseData = "-6" then
+                            is_server_run <- false
+                        else
+                            let msg = System.Text.Encoding.ASCII.GetBytes(serverResponseData)
+                            stream.Write(msg, 0, msg.Length)
+                            Console.WriteLine("Responding to Client {0} with result: {1}", clientNum, serverResponseData)
+                        // Console.WriteLine("Response Sent to Client {0}", clientNum)
+                with
+                | ex -> 
+                    Console.WriteLine("Client {0} disconnected brutely. :(",  clientNum)
+                    continueProcessing <- false
         } |> Async.Start
 
         while continueProcessing && is_server_run do
