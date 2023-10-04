@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\user\\Desktop\\DOSP-1\\Client-Server-Socket-Programming\\Server\\Server.fsproj": {}
+    "C:\\Users\\user\\Desktop\\test\\Client-Server-Socket-Programming\\Server\\Server.fsproj": {}
   },
   "projects": {
-    "C:\\Users\\user\\Desktop\\DOSP-1\\Client-Server-Socket-Programming\\Server\\Server.fsproj": {
+    "C:\\Users\\user\\Desktop\\test\\Client-Server-Socket-Programming\\Server\\Server.fsproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\user\\Desktop\\DOSP-1\\Client-Server-Socket-Programming\\Server\\Server.fsproj",
+        "projectUniqueName": "C:\\Users\\user\\Desktop\\test\\Client-Server-Socket-Programming\\Server\\Server.fsproj",
         "projectName": "Server",
-        "projectPath": "C:\\Users\\user\\Desktop\\DOSP-1\\Client-Server-Socket-Programming\\Server\\Server.fsproj",
+        "projectPath": "C:\\Users\\user\\Desktop\\test\\Client-Server-Socket-Programming\\Server\\Server.fsproj",
         "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\user\\Desktop\\DOSP-1\\Client-Server-Socket-Programming\\Server\\obj\\",
+        "outputPath": "C:\\Users\\user\\Desktop\\test\\Client-Server-Socket-Programming\\Server\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config"

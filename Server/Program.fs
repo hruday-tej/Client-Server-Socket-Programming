@@ -4,9 +4,10 @@ open System.IO;
 open System.Net;
 open System.Net.Sockets;
 open System.Text;
+open System.Threading.Tasks
 
 module ServerSideProgram=
-
+    let mutable is_server_run = true
     type Error_Incorrect_Operation_Command() =
         inherit Exception()
     type Error_Inputs_Less_Than_Two() =
@@ -62,12 +63,13 @@ module ServerSideProgram=
         code
 
     let rec clientCommunication (client: TcpClient, clientNum: int, server: TcpListener) =
-        try
-            let stream = client.GetStream()
-            let bufferArray : byte[] = Array.zeroCreate 256
-            let mutable continueProcessing = true
 
-            let handleRequest () =
+        let stream = client.GetStream()
+        let bufferArray : byte[] = Array.zeroCreate 256
+        let mutable continueProcessing = true
+
+        async{
+            while continueProcessing && is_server_run do
                 let bytes = stream.Read(bufferArray, 0, bufferArray.Length)
                 if bytes = 0 then
                     // The client has disconnected, so stop processing
@@ -78,49 +80,59 @@ module ServerSideProgram=
                     Console.WriteLine("Received From Client {0}: {1}", clientNum, clientRequestData)
                     let wordArray = clientRequestData.Split([|' '|], StringSplitOptions.RemoveEmptyEntries)
                     let serverResponseData = operate (wordArray)
-                    let wordArray = clientRequestData.Split([|' '|], StringSplitOptions.RemoveEmptyEntries)
-                    let serverResponseData = operate (wordArray)
-                    let msg = System.Text.Encoding.ASCII.GetBytes(serverResponseData)
-                    stream.Write(msg, 0, msg.Length)
-                    Console.WriteLine("Responding to Client {0} with result: {1}", clientNum, serverResponseData)
+                    
+                    if serverResponseData = "-6" then
+                        is_server_run <- false
+                    else
+                        let msg = System.Text.Encoding.ASCII.GetBytes(serverResponseData)
+                        stream.Write(msg, 0, msg.Length)
+                        Console.WriteLine("Responding to Client {0} with result: {1}", clientNum, serverResponseData)
                     // Console.WriteLine("Response Sent to Client {0}", clientNum)
+        } |> Async.Start
 
-                    let parts = clientRequestData.Split(' ')
-                    match parts with
-                    | [| "terminate" |] ->
-                        // cancellationTokenSource.Cancel()
-                        server.Stop()
-                    | _ ->
-                        printf ""
+        while continueProcessing && is_server_run do
+            async{
+                do! Async.Sleep 500
+            } |> ignore
+            
+        if is_server_run = false then
+            let msg = System.Text.Encoding.ASCII.GetBytes("-5")
+            stream.Write(msg, 0, msg.Length)
+            Console.WriteLine("Responding to Client {0} with result: {1}", clientNum, "-5")
 
-            while continueProcessing do
-                handleRequest()
-
-        with
-            | ex ->
-                Console.WriteLine("An error occurred with Client {0}: {1}", clientNum, ex.Message)
-                // Handle the error and continue processing other clients if needed
+  
 
 
     let initiateServer() =
-        try
-            let port = 13000;
-            let ipAddress = IPAddress.Parse("127.0.0.1")
-            let server = new TcpListener(ipAddress, port)
-            server.Start()
-            Console.WriteLine("Server is running and listening on port {0}.", port)
-            let mutable clientNum = 0
-            while true do
-                Console.Write("Waiting for a connection... ")
-                let client = server.AcceptTcpClient()
-                clientNum <- clientNum + 1
-                Console.WriteLine("Client {0} Connected",clientNum)
-                async {
-                    do! Async.SwitchToThreadPool()
-                    clientCommunication(client, clientNum, server)
-                } |> Async.Start
-        with
-            | Failure(msg) -> printfn "%s" msg
-            | ex -> printfn "An error occurred: %s" ex.Message
+        async{
+            try
+                let port = 13000;
+                let ipAddress = IPAddress.Parse("127.0.0.1")
+                let server = new TcpListener(ipAddress, port)
+                server.Start()
+                Console.WriteLine("Server is running and listening on port {0}.", port)
+                let mutable clientNum = 0
+                while is_server_run do
+                    Console.Write("Waiting for a connection... ")
+                    let client = server.AcceptTcpClient()
+                    clientNum <- clientNum + 1
+                    Console.WriteLine("Client {0} Connected",clientNum)
+                    async {
+                        do! Async.SwitchToThreadPool()
+                        clientCommunication(client, clientNum, server)
+                    } |> Async.Start
+            with
+                | Failure(msg) -> printfn "%s" msg
+                | ex -> printfn "An error occurred: %s" ex.Message
+        }|> Async.Start
+
+
+        while is_server_run do
+            async{
+                do! Async.Sleep 500
+            } |> ignore
+            
+
+        
 
 ServerSideProgram.initiateServer()
