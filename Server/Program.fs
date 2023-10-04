@@ -105,6 +105,9 @@ module ServerSideProgram=
             let msg = System.Text.Encoding.ASCII.GetBytes("-5")
             stream.Write(msg, 0, msg.Length)
             Console.WriteLine("Responding to Client {0} with result: {1}", clientNum, "-5")
+            stream.Close() // close all connections and ports
+            client.Close()
+            client.Dispose() 
 
   
 
@@ -140,7 +143,7 @@ module ServerSideProgram=
                 do! Async.Sleep 500
             } |> ignore
 
-        server.Stop()
+        server.Stop() // close server
         cts.Cancel()
             
 
