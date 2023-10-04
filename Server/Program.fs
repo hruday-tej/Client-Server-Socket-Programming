@@ -4,9 +4,11 @@ open System.IO;
 open System.Net;
 open System.Net.Sockets;
 open System.Text;
+open System.Threading.Tasks
+open System.Threading
 
 module ServerSideProgram=
-
+    let mutable is_server_run = true  // self-definition exception
     type Error_Incorrect_Operation_Command() =
         inherit Exception()
     type Error_Inputs_Less_Than_Two() =
@@ -15,7 +17,7 @@ module ServerSideProgram=
         inherit Exception()
 
 
-    let exceptionHandler (array:string array) : string = 
+    let exceptionHandler (array:string array) : string = // if there is a system command, such as "bye" and "terminate", or an exception, it would return the error code. Otherwise, it will return pass
         let mutable code = "pass"
         try
             if(array.Length = 1 && array.[0]= "bye") then code <- "-5"
@@ -34,7 +36,7 @@ module ServerSideProgram=
             | :? FormatException -> "-4"
             | ex -> "-5"
 
-    let operate (array : string array) : string=
+    let operate (array : string array) : string= // Since all possible errors has been handled, we could calculate the client's command.
         let mutable code = exceptionHandler(array)
         if code = "pass" then
             let mutable result = 0
@@ -62,65 +64,89 @@ module ServerSideProgram=
         code
 
     let rec clientCommunication (client: TcpClient, clientNum: int, server: TcpListener) =
-        try
-            let stream = client.GetStream()
-            let bufferArray : byte[] = Array.zeroCreate 256
-            let mutable continueProcessing = true
 
-            let handleRequest () =
-                let bytes = stream.Read(bufferArray, 0, bufferArray.Length)
-                if bytes = 0 then
-                    // The client has disconnected, so stop processing
-                    Console.WriteLine("Client {0} has disconnected.", clientNum)
+        let stream = client.GetStream()
+        let bufferArray : byte[] = Array.zeroCreate 256
+        let mutable continueProcessing = true
+
+        async{
+            while continueProcessing && is_server_run do
+                try
+                    let bytes = stream.Read(bufferArray, 0, bufferArray.Length)
+                    if bytes = 0 then
+                        // The client has disconnected, so stop processing
+                        Console.WriteLine("Client {0} has disconnected.", clientNum)
+                        continueProcessing <- false
+                    else
+                        let clientRequestData = System.Text.Encoding.ASCII.GetString(bufferArray, 0, bytes)
+                        Console.WriteLine("Received From Client {0}: {1}", clientNum, clientRequestData)
+                        let wordArray = clientRequestData.Split([|' '|], StringSplitOptions.RemoveEmptyEntries)
+                        let serverResponseData = operate (wordArray)
+                        
+                        if serverResponseData = "-6" then
+                            is_server_run <- false
+                        else
+                            let msg = System.Text.Encoding.ASCII.GetBytes(serverResponseData)
+                            stream.Write(msg, 0, msg.Length)
+                            Console.WriteLine("Responding to Client {0} with result: {1}", clientNum, serverResponseData)
+                        // Console.WriteLine("Response Sent to Client {0}", clientNum)
+                with
+                | ex -> 
+                    Console.WriteLine("Client {0} disconnected brutely. :(",  clientNum)
                     continueProcessing <- false
-                else
-                    let clientRequestData = System.Text.Encoding.ASCII.GetString(bufferArray, 0, bytes)
-                    Console.WriteLine("Received From Client {0}: {1}", clientNum, clientRequestData)
-                    let wordArray = clientRequestData.Split([|' '|], StringSplitOptions.RemoveEmptyEntries)
-                    let serverResponseData = operate (wordArray)
-                    let wordArray = clientRequestData.Split([|' '|], StringSplitOptions.RemoveEmptyEntries)
-                    let serverResponseData = operate (wordArray)
-                    let msg = System.Text.Encoding.ASCII.GetBytes(serverResponseData)
-                    stream.Write(msg, 0, msg.Length)
-                    Console.WriteLine("Responding to Client {0} with result: {1}", clientNum, serverResponseData)
-                    // Console.WriteLine("Response Sent to Client {0}", clientNum)
+        } |> Async.Start
 
-                    let parts = clientRequestData.Split(' ')
-                    match parts with
-                    | [| "terminate" |] ->
-                        // cancellationTokenSource.Cancel()
-                        server.Stop()
-                    | _ ->
-                        printf ""
+        while continueProcessing && is_server_run do // keep tracking 1) the server is still running and 2) server still connect to the client
+            async{ // but the sleep doesn't work
+                do! Async.Sleep 500
+            } |> ignore
+            
+        if is_server_run = false then // if the server is closed, then send error code -5 to the current client this async function connected
+            let msg = System.Text.Encoding.ASCII.GetBytes("-5")
+            stream.Write(msg, 0, msg.Length)
+            Console.WriteLine("Responding to Client {0} with result: {1}", clientNum, "-5")
+            stream.Close() // close all connections and ports
+            client.Close()
+            client.Dispose() 
 
-            while continueProcessing do
-                handleRequest()
-
-        with
-            | ex ->
-                Console.WriteLine("An error occurred with Client {0}: {1}", clientNum, ex.Message)
-                // Handle the error and continue processing other clients if needed
+  
 
 
     let initiateServer() =
-        try
-            let port = 13000;
-            let ipAddress = IPAddress.Parse("127.0.0.1")
-            let server = new TcpListener(ipAddress, port)
-            server.Start()
-            Console.WriteLine("Server is running and listening on port {0}.", port)
-            let mutable clientNum = 0
-            while true do
-                Console.Write("Waiting for a connection... ")
-                let client = server.AcceptTcpClient()
-                clientNum <- clientNum + 1
-                Console.WriteLine("Client {0} Connected",clientNum)
-                async {
-                    do! Async.SwitchToThreadPool()
-                    clientCommunication(client, clientNum, server)
-                } |> Async.Start
-        with
-            | Failure(msg) -> printfn "%s" msg
-            | ex -> printfn "An error occurred: %s" ex.Message
+        let cts = new CancellationTokenSource() // used to abort async fucntion
+        let port = 13000;
+        let ipAddress = IPAddress.Parse("127.0.0.1")
+        let server = new TcpListener(ipAddress, port)
+        server.Start()
+        Console.WriteLine("Server is running and listening on port {0}.", port)
+        let mutable clientNum = 0
+        let runServer = async{
+            try
+                while is_server_run do
+                    Console.WriteLine("Waiting for a connection... ")
+                    let client = server.AcceptTcpClient()
+                    clientNum <- clientNum + 1
+                    Console.WriteLine("Client {0} Connected",clientNum)
+                    async {
+                        do! Async.SwitchToThreadPool()
+                        clientCommunication(client, clientNum, server)
+                    } |> Async.Start
+            with
+                | Failure(msg) -> printfn "%s" msg
+                | ex -> printfn "An error occurred: %s" ex.Message
+        }
+        Async.Start(runServer, cts.Token) // add cts.Token to async function, bind them together so we could use cts.Cancel() to abort the async function
+
+
+        while is_server_run do // Keep checking if the server is still running
+            async{ // but the sleep doesn't work
+                do! Async.Sleep 500
+            } |> ignore
+
+        server.Stop() // close server
+        cts.Cancel()
+            
+
+        
 
 ServerSideProgram.initiateServer()
