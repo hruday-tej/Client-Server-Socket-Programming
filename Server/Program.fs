@@ -111,14 +111,14 @@ module ServerSideProgram=
 
     let initiateServer() =
         let cts = new CancellationTokenSource()
+        let port = 13000;
+        let ipAddress = IPAddress.Parse("127.0.0.1")
+        let server = new TcpListener(ipAddress, port)
+        server.Start()
+        Console.WriteLine("Server is running and listening on port {0}.", port)
+        let mutable clientNum = 0
         let runServer = async{
             try
-                let port = 13000;
-                let ipAddress = IPAddress.Parse("127.0.0.1")
-                let server = new TcpListener(ipAddress, port)
-                server.Start()
-                Console.WriteLine("Server is running and listening on port {0}.", port)
-                let mutable clientNum = 0
                 while is_server_run do
                     Console.Write("Waiting for a connection... ")
                     let client = server.AcceptTcpClient()
@@ -139,7 +139,7 @@ module ServerSideProgram=
             async{
                 do! Async.Sleep 500
             } |> ignore
-
+        server.Stop()
         cts.Cancel()
             
 

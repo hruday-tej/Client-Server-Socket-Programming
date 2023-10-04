@@ -48,8 +48,10 @@ module ClientSideProgram=
                 } |> ignore
 
             try
-                cts.Cancel()
+                stream.Close()
                 tcpClient.Close()
+                tcpClient.Dispose()
+                cts.Cancel()
                 raise BreakException
             with
                 | Failure(msg: string) -> printfn "SOMETHING FAILED";
