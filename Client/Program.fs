@@ -29,12 +29,11 @@ module ClientSideProgram=
                 currentClient.Close()
                 Environment.Exit(0)
             Thread.Sleep(2000)
-    let connect () =
+    let connect () = 
         try
             let port = 13000;
             let tcpClient = new TcpClient("127.0.0.1", port)
-            let mutable continueProcessing = true           
-            while continueProcessing do
+            while true do
                 Console.Write("Enter a command (e.g., 'add 5 8'): ")
                 let message = Console.ReadLine()
                 let data : byte[] = System.Text.Encoding.ASCII.GetBytes(message)
@@ -44,18 +43,12 @@ module ClientSideProgram=
                 let bytes = stream.Read(bufferArray, 0, bufferArray.Length)
                 let responseData = System.Text.Encoding.ASCII.GetString(bufferArray, 0, bytes)
                 Console.WriteLine("SERVER's RESPONSE {0}", responseData)
-                if responseData = "-5" then
-                    Console.WriteLine("Received termination command. Exiting.")
-                    continueProcessing <- false
-                    tcpClient.Close()
-                elif responseData = "-6" then
-                    Console.WriteLine("Received termination command. Exiting.")
-                    continueProcessing <- false
-                    tcpClient.Close()
-                    
-        with
-        | Failure(msg: string) -> printfn "SOMETHING FAILED"
-        | BreakException -> Console.WriteLine("Client Disconnected from Server")
 
+                if responseData = "-5" then
+                        tcpClient.Close()
+                        raise BreakException
+        with
+        | Failure(msg: string) -> printfn "SOMETHING FAILED";
+        | BreakException -> Console.WriteLine("Client Disconnected from Server")
 
 ClientSideProgram.connect()
