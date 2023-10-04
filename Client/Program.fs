@@ -19,7 +19,7 @@ module ClientSideProgram=
             let tcpClient = new TcpClient(serverAddress, port)
             let stream = tcpClient.GetStream()
             Console.Write("Enter a command (e.g., 'add 5 8'): ")
-            async{
+            async{ // the first async : receive message from the server 
             
                 while is_run do 
                     let bufferArray : byte[] = Array.zeroCreate 256
@@ -33,8 +33,8 @@ module ClientSideProgram=
             } |> Async.Start
             
             
-            let cts = new CancellationTokenSource()
-            let ReadServer = async{
+            let cts = new CancellationTokenSource() // use to abort the async function
+            let ReadServer = async{ // the second async : send message to the server
                 while is_run do
                     let message = Console.ReadLine()
                     let data : byte[] = System.Text.Encoding.ASCII.GetBytes(message)
@@ -42,13 +42,13 @@ module ClientSideProgram=
             } 
             Async.Start(ReadServer, cts.Token)
 
-            while is_run do
-                async{
+            while is_run do // keep monitoring if the client still running
+                async{ // don't know how to write, fail to wait
                     do! Async.Sleep 500
                 } |> ignore
 
-            try
-                stream.Close()
+            try // close the port and service to prevent dangling thread
+                stream.Close() 
                 tcpClient.Close()
                 tcpClient.Dispose()
                 cts.Cancel()

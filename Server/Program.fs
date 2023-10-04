@@ -8,7 +8,7 @@ open System.Threading.Tasks
 open System.Threading
 
 module ServerSideProgram=
-    let mutable is_server_run = true
+    let mutable is_server_run = true  // self-definition exception
     type Error_Incorrect_Operation_Command() =
         inherit Exception()
     type Error_Inputs_Less_Than_Two() =
@@ -17,7 +17,7 @@ module ServerSideProgram=
         inherit Exception()
 
 
-    let exceptionHandler (array:string array) : string = 
+    let exceptionHandler (array:string array) : string = // if there is a system command, such as "bye" and "terminate", or an exception, it would return the error code. Otherwise, it will return pass
         let mutable code = "pass"
         try
             if(array.Length = 1 && array.[0]= "bye") then code <- "-5"
@@ -36,7 +36,7 @@ module ServerSideProgram=
             | :? FormatException -> "-4"
             | ex -> "-5"
 
-    let operate (array : string array) : string=
+    let operate (array : string array) : string= // Since all possible errors has been handled, we could calculate the client's command.
         let mutable code = exceptionHandler(array)
         if code = "pass" then
             let mutable result = 0
@@ -96,12 +96,12 @@ module ServerSideProgram=
                     continueProcessing <- false
         } |> Async.Start
 
-        while continueProcessing && is_server_run do
-            async{
+        while continueProcessing && is_server_run do // keep tracking 1) the server is still running and 2) server still connect to the client
+            async{ // but the sleep doesn't work
                 do! Async.Sleep 500
             } |> ignore
             
-        if is_server_run = false then
+        if is_server_run = false then // if the server is closed, then send error code -5 to the current client this async function connected
             let msg = System.Text.Encoding.ASCII.GetBytes("-5")
             stream.Write(msg, 0, msg.Length)
             Console.WriteLine("Responding to Client {0} with result: {1}", clientNum, "-5")
@@ -110,7 +110,7 @@ module ServerSideProgram=
 
 
     let initiateServer() =
-        let cts = new CancellationTokenSource()
+        let cts = new CancellationTokenSource() // used to abort async fucntion
         let port = 13000;
         let ipAddress = IPAddress.Parse("127.0.0.1")
         let server = new TcpListener(ipAddress, port)
@@ -120,7 +120,7 @@ module ServerSideProgram=
         let runServer = async{
             try
                 while is_server_run do
-                    Console.Write("Waiting for a connection... ")
+                    Console.WriteLine("Waiting for a connection... ")
                     let client = server.AcceptTcpClient()
                     clientNum <- clientNum + 1
                     Console.WriteLine("Client {0} Connected",clientNum)
@@ -132,13 +132,14 @@ module ServerSideProgram=
                 | Failure(msg) -> printfn "%s" msg
                 | ex -> printfn "An error occurred: %s" ex.Message
         }
-        Async.Start(runServer, cts.Token)
+        Async.Start(runServer, cts.Token) // add cts.Token to async function, bind them together so we could use cts.Cancel() to abort the async function
 
 
-        while is_server_run do
-            async{
+        while is_server_run do // Keep checking if the server is still running
+            async{ // but the sleep doesn't work
                 do! Async.Sleep 500
             } |> ignore
+
         server.Stop()
         cts.Cancel()
             
